@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./signin.css">
+  <link rel="icon" type="image/x-icon" href="./img/socialmedia.svg">
+  <title>Sign in</title>
+</head>
+
+<body>
+  <video autoplay muted loop id="myVideo">
+    <source src="./img/backgraund.mp4" type="video/mp4">
+  </video>
+
+  <main class="content">
+    <section>
+      <div class="sign-in">
+        <div class="sign-in-one">
+          <div class="img">
+            <img src="./img/sign-up.png" alt="sign-up">
+          </div>
+          <form onsubmit="signIn(event)">
+            <div class="sign-in-main">
+              <p>E-mail: </p> 
+              <input type="email" id="email" required>
+              <p>Password: </p>
+              <input type="password" id="password" required>
+            </div>
+            <div class="show-password">
+              <p>Show password</p>
+        <input class="check" type="checkbox" onChange={handleCheck} />
+            </div>
+            <div class="btn">
+              <button type="submit">Sign in</button>
+            </div>
+          </form>
+          <div class="signup">
+            <p>You don't have an account? <a href="./signup.html">Sign up</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const check = document.querySelector(".check");
+      check.addEventListener("change", () =>{
+        const password = document.getElementById('password');
+        if(password.type === "password"){
+          password.type = "text";
+        }
+        else{
+          password.type = "password";
+        }
+      })
+    function signIn(event) {
+  event.preventDefault();
+
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  fetch('http://localhost:3000/signin', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error(text);
+        });
+      }
+      return response.json(); 
+    })
+    .then((data) => {
+      console.log(data);
+      localStorage.setItem('userName', data.name);
+      window.location.href = '../main.html';
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      alert('Login failed: ' + error.message);
+    });
+}
+  </script>
+  <script src="../index.js"></script>
+</body>
+</html>

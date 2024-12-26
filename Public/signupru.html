@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./signup.css">
+  <link rel="icon" href="./img/socialmedia.svg">
+  <title>Регистрация</title>
+</head>
+
+<body>
+  <video autoplay muted loop id="myVideo">
+    <source src="./img/backgraund.mp4" type="video/mp4">
+  </video>
+
+  <main class="content">
+    <section>
+      <div class="sign-up">
+        <div class="sign-up-one">
+          <div class="img">
+            <img src="./img/sign-up.png" alt="Регистрация">
+          </div>
+          <div class="sign-up-main">
+            <p>Имя: </p>
+            <input type="text" id="name">
+            <p>Е-мейл: </p>
+            <input type="email" id="email">
+            <p>Пароль: </p>
+            <input type="password" id="password">
+          </div>
+          <div class="show-password">
+            <p>Показать парол</p>
+      <input class="check" type="checkbox" onChange={handleCheck} />
+          </div>
+          <div class="btn">
+            <button onclick="signUp()">Зарегистрироваться</button>
+          </div>
+          <div class="signin">
+            <p>У вас есть аккаунт? <a href="./signinru.html">Войти</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+        const check = document.querySelector(".check");
+      check.addEventListener("change", () =>{
+        const password = document.getElementById('password');
+        if(password.type === "password"){
+          password.type = "text";
+        }
+        else{
+          password.type = "password";
+        }
+      })
+    function signUp() {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      fetch('http://localhost:3000/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email, password })
+      }).then(response => {
+        if (!response.ok) {
+          return response.text().then(error => { throw new Error(error); });
+        }
+        return response.text();
+      })
+        .then(data => {
+          console.log(data);
+          window.location.href = './signin.html';
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert(error.message);
+        });
+    }
+
+  </script>
+  <script src="../index.js"></script>
+</body>
+
+</html>
